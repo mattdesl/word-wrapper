@@ -4,6 +4,8 @@
 
 ![img](http://i.imgur.com/LqQyHSg.png)
 
+<sup>click [here](http://mattdesl.github.io/word-wrapper/demo/) for a Canvas demo</sup>
+
 This is a generic word wrapper for left-to-right text in 2D applications. It can be used in console, canvas, WebGL, etc. Can use a custom `measure` function for glyph metrics. 
 
 The simplest use-case:
