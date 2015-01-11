@@ -39,7 +39,7 @@ var text = lines
         .join('\n')
 ```
 
-See [demo/canvas](demo/canvas) for a full 2D example.
+See [demo/canvas](demo/canvas.js) for a full 2D example.
 
 ## Usage
 
