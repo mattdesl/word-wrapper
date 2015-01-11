@@ -1,0 +1,47 @@
+{
+  "name": "word-wrapper",
+  "version": "1.0.0",
+  "description": "wraps words based on arbitrary 2D glyphs",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Matt DesLauriers",
+    "email": "dave.des@gmail.com",
+    "url": "https://github.com/mattdesl"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "2d-context": "^1.1.0",
+    "6to5ify": "^3.1.2",
+    "beefy": "^2.1.1",
+    "domready": "^1.0.7",
+    "tap-spec": "^2.1.2",
+    "tape": "^3.0.3"
+  },
+  "scripts": {
+    "test": "node test.js | tap-spec",
+    "canvas": "beefy demo/canvas.js -- -t 6to5ify"
+  },
+  "keywords": [
+    "glyph",
+    "word",
+    "wrap",
+    "wordwrap",
+    "pre",
+    "string",
+    "text",
+    "font",
+    "rendering",
+    "canvas",
+    "2d",
+    "text"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mattdesl/word-wrapper.git"
+  },
+  "homepage": "https://github.com/mattdesl/word-wrapper",
+  "bugs": {
+    "url": "https://github.com/mattdesl/word-wrapper/issues"
+  }
+}
