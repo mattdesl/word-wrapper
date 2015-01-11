@@ -104,4 +104,6 @@ function createMetrics(context, font) {
 
 ## License
 
+The original implementation is based on [LibGDX's word wrapper](http://libgdx.badlogicgames.com/).
+
 MIT, see [LICENSE.md](http://github.com/mattdesl/word-wrapper/blob/master/LICENSE.md) for details.
