@@ -14,13 +14,15 @@
     "2d-context": "^1.1.0",
     "6to5ify": "^3.1.2",
     "beefy": "^2.1.1",
+    "browserify": "^8.1.0",
     "domready": "^1.0.7",
     "tap-spec": "^2.1.2",
     "tape": "^3.0.3"
   },
   "scripts": {
     "test": "node test.js | tap-spec",
-    "canvas": "beefy demo/canvas.js -- -t 6to5ify"
+    "canvas": "beefy demo/canvas.js -- -t 6to5ify",
+    "build": "browserify demo/canvas.js -t 6to5ify > demo/bundle.js"
   },
   "keywords": [
     "glyph",
