@@ -61,6 +61,8 @@ function pre(measure, text, start, end, width) {
 }
 
 function greedy(measure, text, start, end, width, mode) {
+    //A greedy word wrapper based on LibGDX algorithm
+    //https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g2d/BitmapFontCache.java
     var lines = []
 
     var testWidth = width
