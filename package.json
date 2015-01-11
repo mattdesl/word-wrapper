@@ -1,6 +1,6 @@
 {
   "name": "word-wrapper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "wraps words based on arbitrary 2D glyphs",
   "main": "index.js",
   "license": "MIT",
