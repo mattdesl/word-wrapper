@@ -67,7 +67,7 @@ Takes the same parameters as the above method, but returns a list of "lines" for
 
 To layout glyphs in 2D space, you typically will need to measure the width of each glyph (and its x-advance, kerning, etc) to determine the maximum number of glyphs that can fit within a specified *available width*. 
 
-You can pass a custom `measure` function which takes the text being wrapped, the current `start` (inclusive) and `end` (exclusive) indices into the string, and the desired `width`. The return value should be an object with `{ start, end }` indices, representing the actual glyphs that can be rendered within those bounds. 
+You can pass a custom `measure` function which takes the text being wrapped, the current `start` (inclusive) and `end` (exclusive) indices into the string, and the desired `width`. The return value should be an object with `{ start, end }` indices, representing the actual glyphs that can be rendered within those bounds. Some applications may also choose to return more data here (like the line width, to avoid having to compute it again later), this object is used in the output of `wordwrap.lines()`.
 
 For example, a Canvas2D implementation that uses monospace fonts might look like this:
 
