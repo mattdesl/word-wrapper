@@ -2,7 +2,14 @@ var newline = /\n/
 var newlineChar = '\n'
 var whitespace = /\s/
 
-module.exports = function wordwrap(text, opt) {
+module.exports = function(text, opt) {
+    var lines = module.exports.lines(text, opt)
+    return lines.map(function(line) {
+        return text.substring(line.start, line.end)
+    }).join('\n')
+}
+
+module.exports.lines = function wordwrap(text, opt) {
     opt = opt||{}
 
     //zero width results in nothing visible
@@ -11,34 +18,32 @@ module.exports = function wordwrap(text, opt) {
 
     text = text||''
     var width = typeof opt.width === 'number' ? opt.width : Number.MAX_VALUE
-    var start = Math.max(0, opt.start||0);
-    var end = typeof opt.end === 'number' ? opt.end : text.length;
+    var start = Math.max(0, opt.start||0)
+    var end = typeof opt.end === 'number' ? opt.end : text.length
     var mode = opt.mode
-    var clip = opt.clip
 
-    var comptue = opt.compute || monospace
+    var measure = opt.measure || monospace
     if (mode === 'pre')
-        return pre(comptue, text, start, end, width, clip)
+        return pre(measure, text, start, end, width)
     else
-        return greedy(comptue, text, start, end, width, mode, clip)
+        return greedy(measure, text, start, end, width, mode)
 }
 
-
 function idxOf(text, chr, start, end) {
-    var idx = text.indexOf(chr, start);
+    var idx = text.indexOf(chr, start)
     if (idx === -1 || idx > end)
-        return end;
-    return idx;
+        return end
+    return idx
 }
 
 function isWhitespace(chr) {
     return whitespace.test(chr)
 }
 
-function pre(compute, text, start, end, width, clip) {
+function pre(measure, text, start, end, width) {
     var lines = []
     var lineStart = start
-    for (var i=start; i<end; i++) {
+    for (var i=start; i<end && i<text.length; i++) {
         var chr = text.charAt(i)
         var isNewline = newline.test(chr)
 
@@ -46,11 +51,8 @@ function pre(compute, text, start, end, width, clip) {
         //Or if we've reached the EOF
         if (isNewline || i===end-1) {
             var lineEnd = isNewline ? i : i+1
-            var availableWidth = clip ? width : Number.MAX_VALUE
-            var computed = compute(text, lineStart, lineEnd, availableWidth)
-            lines.push(computed)
-            // var chunk = text.substring(computed.start, computed.end)
-            // debugger
+            var measured = measure(text, lineStart, lineEnd, width)
+            lines.push(measured)
             
             lineStart = i+1
         }
@@ -58,7 +60,7 @@ function pre(compute, text, start, end, width, clip) {
     return lines
 }
 
-function greedy(compute, text, start, end, width, mode, clip) {
+function greedy(measure, text, start, end, width, mode) {
     var lines = []
 
     var testWidth = width
@@ -66,7 +68,7 @@ function greedy(compute, text, start, end, width, mode, clip) {
     if (mode === 'nowrap')
         testWidth = Number.MAX_VALUE
 
-    while (start < end) {
+    while (start < end && start < text.length) {
         //get next newline position
         var newLine = idxOf(text, newlineChar, start, end)
 
@@ -78,9 +80,9 @@ function greedy(compute, text, start, end, width, mode, clip) {
         }
 
         //determine visible # of glyphs for the available width
-        var computed = compute(text, start, newLine, testWidth)
+        var measured = measure(text, start, newLine, testWidth)
 
-        var lineEnd = start + (computed.end-computed.start)
+        var lineEnd = start + (measured.end-measured.start)
         var nextStart = lineEnd + newlineChar.length
 
         //if we had to cut the line before the next newline...
@@ -105,7 +107,7 @@ function greedy(compute, text, start, end, width, mode, clip) {
             }
         }
         if (lineEnd >= start) {
-            var result = compute(text, start, lineEnd, testWidth)
+            var result = measure(text, start, lineEnd, testWidth)
             lines.push(result)
         }
         start = nextStart
@@ -113,11 +115,10 @@ function greedy(compute, text, start, end, width, mode, clip) {
     return lines
 }
 
-//determines the visible number of glyphs within that width
+//determines the visible number of glyphs within a given width
 function monospace(text, start, end, width) {
     var glyphs = Math.min(width, end-start)
     return {
-        width: glyphs,
         start: start,
         end: start+glyphs
     }
