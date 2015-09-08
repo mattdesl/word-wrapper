@@ -23,10 +23,11 @@ module.exports.lines = function wordwrap(text, opt) {
     var mode = opt.mode
 
     var measure = opt.measure || monospace
+    var keepLineEnd = opt.keepLineEnd
     if (mode === 'pre')
-        return pre(measure, text, start, end, width)
+        return pre(measure, text, start, end, width, keepLineEnd)
     else
-        return greedy(measure, text, start, end, width, mode)
+        return greedy(measure, text, start, end, width, mode, keepLineEnd)
 }
 
 function idxOf(text, chr, start, end) {
@@ -60,7 +61,7 @@ function pre(measure, text, start, end, width) {
     return lines
 }
 
-function greedy(measure, text, start, end, width, mode) {
+function greedy(measure, text, start, end, width, mode, keepLineEnd) {
     //A greedy word wrapper based on LibGDX algorithm
     //https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/graphics/g2d/BitmapFontCache.java
     var lines = []
@@ -73,20 +74,24 @@ function greedy(measure, text, start, end, width, mode) {
     while (start < end && start < text.length) {
         //get next newline position
         var newLine = idxOf(text, newlineChar, start, end)
-
+            
         //eat whitespace at start of line
         while (start < newLine) {
             if (!isWhitespace( text.charAt(start) ))
                 break
             start++
         }
-
+    
         //determine visible # of glyphs for the available width
         var measured = measure(text, start, newLine, testWidth)
 
-        var lineEnd = start + (measured.end-measured.start)
+        var lineEnd = start + (measured.end - measured.start)
         var nextStart = lineEnd + newlineChar.length
-
+        
+        if (keepLineEnd && newLine < end) {
+            lineEnd++
+        }
+        
         //if we had to cut the line before the next newline...
         if (lineEnd < newLine) {
             //find char to break on

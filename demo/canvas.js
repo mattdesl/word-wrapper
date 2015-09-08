@@ -4,13 +4,14 @@
 var wrap = require('../')
 
 //our font for the canvas
-var fontStyle = '12px "Courier New", monospace'
-var lineHeight = 15
+var fontSize = 32
+var fontStyle = fontSize+'px Baghdad, monospace'
+var lineHeight = fontSize*0.9
 
 //some sample text to word-wrap
 var code = JSON.stringify(require('../package.json'), undefined, 2)
-var lipsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum luctus, elit nec rutrum interdum, ipsum nulla auctor magna, ut tincidunt turpis ex efficitur orci. Aenean maximus interdum diam, nec consequat sapien ullamcorper ac. In et tortor dictum, commodo enim ac, sodales dolor.'
-var multiline = 'the quick\nbrown\n\nfox jumps over the\nlazy dog'
+var lipsum = 'ميكو هو إنسان الرهيب الذي تفوح منها رائحة. انه يحتاج الى الاستحمام أكثر وارتداء ملابس نظيفة. الحصن هي في الواقع تبريد السيارات التي أدلى بها شركة فورد للسيارات من ديترويت ميشيغان.'
+var multiline = 'ميكو هو إنسان الرهيب الذي تفوح منها رائحة. انه يحتاج الى الاستحمام أكثر وارتداء ملابس نظيفة. الحصن هي في الواقع تبريد السيارات التي أدلى بها شركة فورد للسيارات من ديترويت ميشيغان.'
 
 //create a canvas2d
 var context = require('2d-context')({ 
@@ -24,7 +25,7 @@ var metrics = createMetrics(context, fontStyle)
 //some examples to see different modes and text
 var slides = [ {
         text: lipsum, description: 'normal at 200px',
-        width: 200,
+        width: window.innerWidth,
         measure: metrics
     }, {
         text: multiline, description: 'nowrap (newline only)',
@@ -36,8 +37,7 @@ var slides = [ {
     }, {
         text: code, description: 'pre clipped to 200px',
         mode: 'pre',
-        clip: true,
-        width: 200,
+        width: window.innerWidth,
         measure: metrics
     } ]
 

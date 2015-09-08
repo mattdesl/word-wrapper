@@ -25,43 +25,63 @@ test('wraps monospace glyphs by columns', function(t) {
     t.equal(wrap('this is not visible', { width: 0, mode: 'pre' }), '', 'zero width results in empty string')
     t.equal(wrap('this is not\nvisible', { width: 0, mode: 'nowrap' }), 'this is not\nvisible', 'zero width nowrap does not result in empty string')
     t.equal(wrap('test some text'), 'test some text')
-
+    
+    text = 'hello world\n'
+    var line = wrap.lines(text, { keepLineEnd: true })[0]
+    t.equal(text.substring(line.start, line.end), 'hello world\n')
+    
+    
+    text = 'hello world\n\nblahfoo bar\n'
+    line = wrap.lines(text, { keepLineEnd: true })[2]
+    t.equal(text.substring(line.start, line.end), 'blahfoo bar\n')
+    
+    text = 'hello world\n\nblah bar\n'
+    var lines = wrap.lines(text, { keepLineEnd: true, width: 5 })
+    t.deepEqual(lines.map(function (x) {
+        return text.substring(x.start, x.end)  
+    }), [ 'hello', 'world', '\n', 'blah', 'bar\n' ])
+    
+    text = '  void main () {\n  foo;'
+    lines = wrap.lines(text, { keepLineEnd: true, mode: 'pre' })
+    t.deepEqual(lines.map(function (x) {
+        return text.substring(x.start, x.end)  
+    }), [ 'hello', 'world', '\n', 'blah', 'bar\n' ])
     t.end()
 })
 
-test('wrap a sub-section', function(t) {
-    var str = 'the quick brown fox jumps over the lazy dog'
+// test('wrap a sub-section', function(t) {
+//     var str = 'the quick brown fox jumps over the lazy dog'
 
-    //word-wrap the entire sentence
-    var text = wrap(str, { width: 10 })
+//     //word-wrap the entire sentence
+//     var text = wrap(str, { width: 10 })
 
-    //bits at a time
-    var start = 20
-    var end = 30
-    var text0 = wrap(str, { width: 10, start: start, end: end })
-    var text1 = wrap(str, { width: 10, start: end })
+//     //bits at a time
+//     var start = 20
+//     var end = 30
+//     var text0 = wrap(str, { width: 10, start: start, end: end })
+//     var text1 = wrap(str, { width: 10, start: end })
 
-    t.equal(text0, 'jumps over', 'only word-wraps a sub-section of text')
-    t.equal(text1, 'the lazy\ndog', 'only word-wraps a sub-section of text')
-    t.end()
-})
+//     t.equal(text0, 'jumps over', 'only word-wraps a sub-section of text')
+//     t.equal(text1, 'the lazy\ndog', 'only word-wraps a sub-section of text')
+//     t.end()
+// })
 
-test('custom compute function', function(t) {
-    //a custom compute function that assumes pixel width instead of monospace char width
-    var word = 'words'
-    t.deepEqual(compute2(word, 0, word.length, 4), { end: 0, start: 0, width: 0 }, 'test compute')
-    t.deepEqual(compute2(word, 0, word.length, 5), { end: 1, start: 0, width: 5 }, 'test compute')
+// test('custom compute function', function(t) {
+//     //a custom compute function that assumes pixel width instead of monospace char width
+//     var word = 'words'
+//     t.deepEqual(compute2(word, 0, word.length, 4), { end: 0, start: 0, width: 0 }, 'test compute')
+//     t.deepEqual(compute2(word, 0, word.length, 5), { end: 1, start: 0, width: 5 }, 'test compute')
 
-    var text = 'some lines'
-    t.equal(wrap(text, { width: 20, measure: compute2 }), 'some\nline\ns', 'cuts text with variable glyph width')
-    t.end()
-})
+//     var text = 'some lines'
+//     t.equal(wrap(text, { width: 20, measure: compute2 }), 'some\nline\ns', 'cuts text with variable glyph width')
+//     t.end()
+// })
 
-test('wraps text to a list of lines', function(t) {
-    var expected = [ { end: 9, start: 0 }, { end: 15, start: 10 } ]
-    t.deepEqual(lines('the quick brown', { width: 10 }), expected, 'returns a list of substring indices')
-    t.end()
-})
+// test('wraps text to a list of lines', function(t) {
+//     var expected = [ { end: 9, start: 0 }, { end: 15, start: 10 } ]
+//     t.deepEqual(lines('the quick brown', { width: 10 }), expected, 'returns a list of substring indices')
+//     t.end()
+// })
 
 function compute2(text, start, end, width) {
     //assume each glyph is Npx monospace
