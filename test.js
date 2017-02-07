@@ -20,6 +20,9 @@ test('wraps monospace glyphs by columns', function(t) {
     var nowrap = 'this text  \n  only wraps \nnewlines'
     t.equal(wrap(nowrap, { mode: 'nowrap' }), 'this text  \nonly wraps \nnewlines', 'eats starting whitespace')
 
+    var prewrap = 'lorem           \n ipsum dolor     sit amet';
+    t.equal(wrap(prewrap, { mode: 'pre-wrap', width: 10 }), 'lorem     \n     \n ipsum\ndolor    \nsit amet', 'pre-wrap with N width')
+
     t.equal(wrap(''), '')
     t.equal(wrap('this is not visible', { width: 0 }), '', 'zero width results in empty string')
     t.equal(wrap('this is not visible', { width: 0, mode: 'pre' }), '', 'zero width results in empty string')
