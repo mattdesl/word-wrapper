@@ -49,8 +49,8 @@ test('wrap a sub-section', function(t) {
 test('custom compute function', function(t) {
     //a custom compute function that assumes pixel width instead of monospace char width
     var word = 'words'
-    t.deepEqual(compute2(word, 0, word.length, 4), { end: 0, start: 0, width: 0 }, 'test compute')
-    t.deepEqual(compute2(word, 0, word.length, 5), { end: 1, start: 0, width: 5 }, 'test compute')
+    t.deepEqual(compute2(word, 0, word.length, 4), { end: 0, start: 0, width: 0, wrap: true }, 'test compute')
+    t.deepEqual(compute2(word, 0, word.length, 5), { end: 1, start: 0, width: 5, wrap: true }, 'test compute')
 
     var text = 'some lines'
     t.equal(wrap(text, { width: 20, measure: compute2 }), 'some\nline\ns', 'cuts text with variable glyph width')
@@ -58,8 +58,22 @@ test('custom compute function', function(t) {
 })
 
 test('wraps text to a list of lines', function(t) {
-    var expected = [ { end: 9, start: 0 }, { end: 15, start: 10 } ]
+    var expected = [ { end: 9, start: 0, wrap: true }, { end: 15, start: 10, wrap: false } ]
     t.deepEqual(lines('the quick brown', { width: 10 }), expected, 'returns a list of substring indices')
+    t.end()
+})
+
+test('lines includes wrap boolean value', function(t) {
+    var expected1 = [ { end: 9, start: 0, wrap: true }, { end: 15, start: 10, wrap: false } ]
+    t.deepEqual(lines('the quick brown', { width: 10 }), expected1, 'returns a list of substring indices with correct wrap values')
+
+    var expected2 = [ { end: 9, start: 0, wrap: true }, { end: 15, start: 10, wrap: false }, { end: 25, start: 16, wrap: true }, { end: 34, start: 26, wrap: true }, { end: 43, start: 35, wrap: false } ]
+    t.deepEqual(lines('the quick brown\nfox jumps over the lazy dog', { width: 10 }), expected2, 'returns a list of substring indices with correct wrap values')
+
+    var text = 'some lines'
+    var expected3 = [ { end: 4, start: 0, width: 20, wrap: true }, { end: 9, start: 5, width: 20, wrap: true }, { end: 10, start: 9, width: 5, wrap: false } ]
+    t.deepEqual(lines(text, { width: 20, measure: compute2 }), expected3, 'wrap value from custom measure function')
+
     t.end()
 })
 
@@ -73,7 +87,8 @@ function compute2(text, start, end, width) {
     return {
         width: glyphs * pxWidth, //only used for unit test
         start: start,
-        end: start+glyphs
+        end: start+glyphs,
+        wrap: totalGlyphs > glyphs*pxWidth
     }
 }
 
