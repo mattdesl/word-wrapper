@@ -61,13 +61,13 @@ If mode is `"pre"` and `width` is specified, it will clip the characters to the 
 
 #### `lines = wordwrap.lines(text[, opt])`
 
-Takes the same parameters as the above method, but returns a list of "lines" objects for manual text layout/rendering. A "line" is typically an object with `{ start, end }` indices that can be used with `text.substring(start, end)`. The "line" is the return value from the `measure` function, so it may also include application-specific data (i.e. to avoid re-computing line widths).
+Takes the same parameters as the above method, but returns a list of "lines" objects for manual text layout/rendering. A "line" is typically an object with `{ start, end, wrap }` indices that can be used with `text.substring(start, end)` and the boolean `wrap` that is true for lines of text that were long enough to wrap. The "line" is the return value from the `measure` function, so it may also include application-specific data (i.e. to avoid re-computing line widths).
 
 ## measure
 
 To layout glyphs in 2D space, you typically will need to measure the width of each glyph (and its x-advance, kerning, etc) to determine the maximum number of glyphs that can fit within a specified *available width*. 
 
-You can pass a custom `measure` function which takes the text being wrapped, the `start` (inclusive) and `end` (exclusive) indices into the string, and the desired `width`. The return value should be an object with `{ start, end }` indices, representing the actual glyphs that can be rendered within those bounds. 
+You can pass a custom `measure` function which takes the text being wrapped, the `start` (inclusive) and `end` (exclusive) indices into the string, and the desired `width`. The return value should be an object with `{ start, end, wrap }` indices, representing the actual glyphs that can be rendered within those bounds. `wrap` is a boolean representing whether the line was forced to wrap.
 
 For example, a Canvas2D implementation that uses monospace fonts might look like this:
 
@@ -90,7 +90,8 @@ function createMetrics(context, font) {
         var glyphs = Math.min(end-start, availableGlyphs, totalGlyphs)
         return {
             start: start,
-            end: start+glyphs
+            end: start+glyphs,
+            wrap: totalGlyphs > glyphs*charWidth
         }
     }
 }

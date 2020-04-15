@@ -110,6 +110,7 @@ function greedy(measure, text, start, end, width, mode) {
         }
         if (lineEnd >= start) {
             var result = measure(text, start, lineEnd, testWidth)
+            result.wrap = measured.wrap;
             lines.push(result)
         }
         start = nextStart
@@ -119,9 +120,11 @@ function greedy(measure, text, start, end, width, mode) {
 
 //determines the visible number of glyphs within a given width
 function monospace(text, start, end, width) {
-    var glyphs = Math.min(width, end-start)
+    var length = end-start;
+    var glyphs = Math.min(width, length)
     return {
         start: start,
-        end: start+glyphs
+        end: start+glyphs,
+        wrap: length > width
     }
 }
