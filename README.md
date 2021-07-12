@@ -6,14 +6,26 @@
 
 <sup>click [here](http://mattdesl.github.io/word-wrapper/demo/) for a Canvas demo</sup>
 
-This is a generic word wrapper for left-to-right text in 2D applications. It can be used in console, canvas, WebGL, etc. Accepts a custom `measure` function for glyph metrics. 
+This is a generic word wrapper for left-to-right text in 2D applications. It can be used in console, canvas, WebGL, etc. Accepts a custom `measure` function for glyph metrics.
+
+## Prerequisites
+
+```
+$ pip install pre-commit
+```
+
+## Installation
+
+```
+$ pre-commit install --install-hooks
+```
 
 The simplest use-case:
 
 ```js
 var text = wrap('the quick brown fox jumps over the lazy dog', { width: 8 })
 console.log(text)
-``` 
+```
 
 This will print the following:
 
@@ -57,7 +69,7 @@ Word-wraps the `text` string with the given options. Returns a string with the w
 
 The `width` is measured in 'units' which could be pixels, centimeters, characters, etc. By default, one "unit" corresponds to one character (i.e. for monospace console rendering). To wrap text to a pixel width, you should use a custom [measure](#measure) function.
 
-If mode is `"pre"` and `width` is specified, it will clip the characters to the given width (to avoid them over-flowing outside the bounds). 
+If mode is `"pre"` and `width` is specified, it will clip the characters to the given width (to avoid them over-flowing outside the bounds).
 
 #### `lines = wordwrap.lines(text[, opt])`
 
@@ -65,9 +77,9 @@ Takes the same parameters as the above method, but returns a list of "lines" obj
 
 ## measure
 
-To layout glyphs in 2D space, you typically will need to measure the width of each glyph (and its x-advance, kerning, etc) to determine the maximum number of glyphs that can fit within a specified *available width*. 
+To layout glyphs in 2D space, you typically will need to measure the width of each glyph (and its x-advance, kerning, etc) to determine the maximum number of glyphs that can fit within a specified *available width*.
 
-You can pass a custom `measure` function which takes the text being wrapped, the `start` (inclusive) and `end` (exclusive) indices into the string, and the desired `width`. The return value should be an object with `{ start, end }` indices, representing the actual glyphs that can be rendered within those bounds. 
+You can pass a custom `measure` function which takes the text being wrapped, the `start` (inclusive) and `end` (exclusive) indices into the string, and the desired `width`. The return value should be an object with `{ start, end }` indices, representing the actual glyphs that can be rendered within those bounds.
 
 For example, a Canvas2D implementation that uses monospace fonts might look like this:
 
@@ -98,7 +110,7 @@ function createMetrics(context, font) {
 function draw(context) {
     var lines = wordwrap(text, { measure: measure, width: 200 })
 
-    //draw the lines.. 
+    //draw the lines..
 }
 ```
 
