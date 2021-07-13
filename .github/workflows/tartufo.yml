@@ -1,0 +1,21 @@
+name: 🍨 Tartufo 🏴‍☠️
+
+on: [push]
+
+jobs:
+  tartufo:
+    name: Run Tartufo
+    runs-on: ubuntu-latest
+    steps:
+    - uses: "actions/checkout@v2"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Setup Python 🐍
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+    - name: Check for leaks 💦
+      run: |
+        git pull --unshallow
+        pip install tartufo
+        tartufo --config tartufo.toml scan-local-repo .

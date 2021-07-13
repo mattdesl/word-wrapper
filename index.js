@@ -74,17 +74,19 @@ function greedy(measure, text, start, end, width, mode) {
         //get next newline position
         var newLine = idxOf(text, newlineChar, start, end)
 
-        //eat whitespace at start of line
-        while (start < newLine) {
-            if (!isWhitespace( text.charAt(start) ))
-                break
-            start++
+        if (mode !== 'pre-wrap') {
+            //eat whitespace at start of line
+            while (start < newLine) {
+                if (!isWhitespace( text.charAt(start) ))
+                    break
+                start++
+            }
         }
 
         //determine visible # of glyphs for the available width
         var measured = measure(text, start, newLine, testWidth)
 
-        var lineEnd = start + (measured.end-measured.start)
+        var lineEnd = start + (measured.end - measured.start)
         var nextStart = lineEnd + newlineChar.length
 
         //if we had to cut the line before the next newline...
@@ -98,6 +100,9 @@ function greedy(measure, text, start, end, width, mode) {
             if (lineEnd === start) {
                 if (nextStart > start + newlineChar.length) nextStart--
                 lineEnd = nextStart // If no characters to break, show all.
+            } else if (mode === 'pre-wrap') {
+                // start on the next character after the current whitespace
+                nextStart = lineEnd + 1;
             } else {
                 nextStart = lineEnd
                 //eat whitespace at end of line
