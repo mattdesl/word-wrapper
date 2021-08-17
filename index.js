@@ -1,6 +1,6 @@
 var newline = /\n/
 var newlineChar = '\n'
-var whitespace = /\s/
+var whitespace = /(?!\u00A0)\s/
 
 module.exports = function(text, opt) {
     var lines = module.exports.lines(text, opt)
